@@ -4,18 +4,15 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  FormControl,
-  Select,
-  MenuItem,
-  InputLabel,
   createStyles,
   makeStyles,
   Grid,
-  Theme,
-  ButtonGroup,
-  Button
+  Theme
 } from "@material-ui/core";
 import FilterIcon from "@material-ui/icons/FilterList";
+import TabFilter from "./TabFilter";
+import DropDownFilter from "./DropDownFilter";
+import { useStoreActions } from "../store";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,28 +29,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Filter = () => {
-  const classes = useStyles();
-  return (
-    <FormControl className={classes.formControl}>
-      <InputLabel id="demo-simple-select-label">מחלקה</InputLabel>
-      <Select
-        labelId="demo-simple-select-label"
-        id="demo-simple-select"
-        // value={age}
-        // onChange={handleChange}
-      >
-        <MenuItem value={10}>Ten</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem>
-      </Select>
-    </FormControl>
-  );
-};
-
 const FilterPanel = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState([]);
+  const applyFilter = useStoreActions(
+    (actions) => actions.chartsData.applyFilte
+  );
 
   const handleChange = (val: number) => {
     let x = [];
@@ -61,38 +42,44 @@ const FilterPanel = () => {
 
     setValue(x);
   };
+
+  const TabHandleChange = (val: string) => {
+    applyFilter(val);
+  };
+
   return (
     <Accordion className={classes.FilterPanel}>
       <AccordionSummary
         color="primary"
-        expandIcon={<FilterIcon />}
+        // expandIcon={}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
-        <Typography>סינון</Typography>
+        <FilterIcon style={{ margin: "0 auto" }} />
+        {/* <Typography>סינון</Typography> */}
       </AccordionSummary>
       <AccordionDetails>
         <Grid container>
           <Grid item xs={1}></Grid>
           <Grid item xs={2}>
-            <Filter />
+            <DropDownFilter />
           </Grid>
           <Grid item xs={2}>
-            <Filter />
+            <DropDownFilter />
           </Grid>
           <Grid item xs={2}>
-            <Filter />
+            <DropDownFilter />
           </Grid>
           <Grid item xs={2}>
-            <Filter />
+            <DropDownFilter />
           </Grid>
           <Grid item xs={2}>
-            <Filter />
+            <DropDownFilter />
           </Grid>
-          <Grid item xs={5}>
-            <Typography>סינון</Typography>
+          <Grid item xs={4}>
+            <Typography>דיון</Typography>
 
-            <ButtonGroup
+            {/* <ButtonGroup
               color="primary"
               aria-label="outlined primary button group"
             >
@@ -110,7 +97,7 @@ const FilterPanel = () => {
                 }}
                 variant={value[2]}
               >
-                Two
+                Two 
               </Button>
               <Button
                 onClick={() => {
@@ -120,20 +107,27 @@ const FilterPanel = () => {
               >
                 Three
               </Button>
-            </ButtonGroup>
+            </ButtonGroup> */}
 
-            {/* <Tabs
-                value={value}
-                indicatorColor="primary"
-                textColor="primary"
-                onChange={handleChange}
-                aria-label="disabled tabs example"
-              >
-                <Tab label="Active" />
-                <Tab label="Disabled" />
-                <Tab label="Active" />
-              </Tabs> */}
+            <TabFilter
+              lables={["Mr", "Mrs", "Miss", "Madame", "Monsieur"]}
+              OnChange={TabHandleChange}
+              name="title"
+            />
           </Grid>
+          <Grid item xs={4}>
+            <Typography>YYY</Typography>
+            <TabFilter
+              lables={["female", "male"]}
+              OnChange={TabHandleChange}
+              name="gender"
+            />
+          </Grid>
+
+          {/* <Grid item xs={4}>
+            <Typography>סינון</Typography>
+            <TabFilter lables={["a1", "a2", "a3"]} />
+          </Grid> */}
         </Grid>
       </AccordionDetails>
     </Accordion>

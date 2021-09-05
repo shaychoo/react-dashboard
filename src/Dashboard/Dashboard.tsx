@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, Grid, CardHeader, CardContent } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import HorizontalBarChart from "../charts/HorizontalBarChart";
 import DoughnutChart from "../charts/DoughnutChart";
 import VerticalBar from "../charts/VerticalBar";
@@ -12,7 +12,7 @@ const Dashboard = () => {
     <>
       <FilterPanel />
 
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         <Grid item xs={4}>
           <ChartCard title="Line Chart">
             <LineChart />

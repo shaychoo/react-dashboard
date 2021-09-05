@@ -1,44 +1,33 @@
 import React from "react";
 import { Doughnut, Chart } from "react-chartjs-2";
 import { useStoreState } from "../store";
+import useChartColors from "../Utils/useChartColors";
 
-let data = {
-  labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-  datasets: [
-    {
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-        "rgba(255, 159, 64, 0.2)"
-      ],
-      borderColor: [
-        "rgba(255, 99, 132, 1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-        "rgba(75, 192, 192, 1)",
-        "rgba(153, 102, 255, 1)",
-        "rgba(255, 159, 64, 1)"
-      ],
-      borderWidth: 1
-    }
-  ]
+const DatasetsColors = {
+  Ms: "255, 99, 132",
+  Mr: "54, 162, 235",
+  Mrs: "255, 206, 86",
+  Miss: "75, 192, 192",
+  Madame: "153, 102, 255",
+  Monsieur: "255, 159, 64"
+};
+
+const defaultDatasetOptions = {
+  borderWidth: 1
 };
 
 const options = {
   xdata: "dsadsa",
   responsive: true,
   maintainAspectRatio: false,
-  backgroundColor: "rgba(255, 255, 255, 1)",
+
   legend: {
     position: "right"
   },
   elements: {
     center: {
-      text: "103&חסמים",
+      text: "xxx&חסמים",
+      textArray: [],
       color: "#FF6384", // Default is #000000
       fontStyle: "Arial", // Default is Arial
       sidePadding: 20, // Default is 20 (as a percentage)
@@ -49,11 +38,28 @@ const options = {
 };
 
 const DoughnutChart = () => {
-  const lables = useStoreState((state) => state.chartsData.labels);
-  const dataValues = useStoreState((state) => state.chartsData.dataValues);
+  // const labels = useStoreState((state) => state.chartsData.labels);
+  // const dataValues = useStoreState((state) => state.chartsData.dataValues);
+  const [dataValues, labels] = useStoreState(
+    (state) => state.chartsData.ChartData
+  ).title;
 
-  data.labels = lables;
-  data.datasets[0].data = dataValues;
+  const colors = useChartColors(DatasetsColors, labels);
+
+  const data = {
+    datasets: [{ data: [...dataValues], ...colors, ...defaultDatasetOptions }],
+    labels: labels
+  };
+  let numOfCenter =
+    data.datasets[0].data.length === 0
+      ? 0
+      : data.datasets[0].data.reduce((a, r) => a + r);
+
+  options.elements.center.textArray = [numOfCenter, "חסמים"];
+
+  //data.labels = labels;
+  //data.datasets[0].data = dataValues;
+
   Chart.defaults.global.onClick = (mouse, chart) => {
     if (chart[0]) {
       console.log(chart[0]._chart.options.xdata);
@@ -87,6 +93,8 @@ const DoughnutChart = () => {
         var widthRatio = elementWidth / stringWidth;
         var newFontSize = Math.floor(30 * widthRatio);
         var elementHeight = chart.innerRadius * 2;
+
+        //ctx.clearRect(0, 0, elementWidth, elementWidth);
 
         // Pick a new font size so it will not be larger than the height of label.
         var fontSizeToUse = Math.min(newFontSize, elementHeight, maxFontSize);
@@ -132,7 +140,8 @@ const DoughnutChart = () => {
             line = testLine;
           }
         }
-        lines = ["138", "חסמים"];
+
+        lines = chart.config.options.elements.center.textArray;
         // Move the center up depending on line height and number of lines
         centerY -= (lines.length / 2) * lineHeight;
 
@@ -148,16 +157,6 @@ const DoughnutChart = () => {
 
   return (
     <>
-      {/* <div className="header">
-        <div className="links">
-          <a
-            className="btn btn-gh"
-            href="https://github.com/reactchartjs/react-chartjs-2/blob/react16/example/src/charts/Doughnut.js"
-          >
-            Github Source
-          </a>
-        </div>
-      </div> */}
       <Doughnut data={data} options={options} />
     </>
   );

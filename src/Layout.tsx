@@ -24,6 +24,7 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import Filter2Icon from "@material-ui/icons/Filter2";
 import MailIcon from "@material-ui/icons/Mail";
 import Dashboard from "./Dashboard/Dashboard";
+import DataTable from "./Dashboard/DataTable";
 
 const drawerWidth = 240;
 
@@ -173,6 +174,7 @@ export default function Layout() {
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Dashboard />
+        <DataTable />
       </main>
     </div>
   );
